@@ -1,0 +1,52 @@
+Column Name,Description,API Field Name,Data Type
+Closed Roll Year,"The year listed represents the leading year of the fiscal year that the assessed value is effective for taxation purposes. For example, 2009 represents the 2009-2010 fiscal year during which the assessed values listed were effective (i.e. billed and collected). Note that a fiscal year starts July 1st and ends June 30th so that 2009 would start on July 1st, 2009 and end on June 30th 2010.",closed_roll_year,Number
+Property Location,"Situs/Location, as well as room/unit number.",property_location,Text
+Parcel Number,Block and Lot Number (Full Assessor Parcel Number),parcel_number,Text
+Block,The block portion of the parcel number broken out.,block,Text
+Lot,The lot portion of the parcel number broken out.,lot,Text
+Volume Number,Volume number,volume_number,Number
+Use Code,"Use Codes group together related property class codes. They are defined by the field Use Definition. See also the field ""Property Class Code."" Property class codes and their related use codes are defined in the reference dataset: https://data.sfgov.org/d/pa56-ek2h",use_code,Text
+Use Definition,"The definition for the field ""Use Code."" Property class codes and their related use codes are defined in the reference dataset: https://data.sfgov.org/d/pa56-ek2h",use_definition,Text
+Property Class Code,"Property type code defined in the field ""Property Class Code Definition."" Property class codes and their related use codes are defined in the reference dataset: https://data.sfgov.org/d/pa56-ek2h
+
+Please note, VCIX was truncated in the source and at the time records marked VCI could be VCIX. This is a rare code and indicates vacant land with restrictions as opposed to without.",property_class_code,Text
+Property Class Code Definition,"Property type definition (name) based that defines the code in the field ""Property Class Code."" Property class codes and their related use codes are defined in the reference dataset: https://data.sfgov.org/d/pa56-ek2h
+
+Please note, the property use code VCIX was truncated in the source and at the time records marked VCI could be VCIX. This is a rare code and indicates vacant land with restrictions as opposed to without.",property_class_code_definition,Text
+Year Property Built,Year improvement was built (can be blend of original and newer construction),year_property_built,Text
+Number of Bathrooms,Number of bathrooms (BA with no shower or tub is 1/2 bathroom),number_of_bathrooms,Number
+Number of Bedrooms,Number of bedrooms (bedrooms have a closet),number_of_bedrooms,Number
+Number of Rooms,"Number of rooms, excluding bathrooms, halls, closets, etc.",number_of_rooms,Number
+Number of Stories,Number of stories,number_of_stories,Number
+Number of Units,Number of units,number_of_units,Number
+Zoning Code,Zoning code of property as of last sale.,zoning_code,Text
+Construction Type,Generally type of construction. See code book for construction type definitions.,construction_type,Text
+Lot Depth,Depth of lot in linear feet,lot_depth,Number
+Lot Frontage,Linear footage of front facing side of lot (front foot),lot_frontage,Number
+Property Area,Square footage of lot,property_area,Number
+Basement Area,Square footage of basement,basement_area,Number
+Lot Area,Square footage of lot,lot_area,Number
+Lot Code,"Lot shapes, could be Rectangle, Square or Other",lot_code,Text
+Tax Rate Area Code,Tax rate dependent on location within the City,tax_rate_area_code,Text
+Percent of Ownership,Percent of ownership,percent_of_ownership,Number
+Exemption Code,"Exemption code if applicable, see the reference of exemption codes here: https://data.sfgov.org/d/g77e-ikb4",exemption_code,Text
+Exemption Code Definition,"Name associated with the exemption code, see reference of exemption codes here: https://data.sfgov.org/d/g77e-ikb4",exemption_code_definition,Text
+Status Code,"i.e. Taxable, Non-Taxable, SBE, etc.",status_code,Text
+Misc Exemption Value,Exemption value for misc. exemptions such as Welfare,misc_exemption_value,Number
+Homeowner Exemption Value,"Homeowner's exemption
+value",homeowner_exemption_value,Number
+Current Sales Date,Date in which the current sale (most recent) for this period was recorded.,current_sales_date,Floating Timestamp
+Assessed Fixtures Value,Assessed value of fixtures,assessed_fixtures_value,Number
+Assessed Improvement Value,Assessed value of improvements,assessed_improvement_value,Number
+Assessed Land Value,Assessed value of land,assessed_land_value,Number
+Assessed Personal Property Value,Assessed value of personal property,assessed_personal_property_value,Number
+Assessor Neighborhood District,"Assessor-Recorder neighborhood district. A district encapsulates a subset of neighborhoods defined by a code and related name. See the field ""Assessor Neighborhood Code"" and ""Assessor Neighborhood"" for the neighborhoods that fall within the district. Also see the reference data for Assessor Neighborhoods at: https://data.sfgov.org/d/dx7g-zwbx",assessor_neighborhood_district,Text
+Assessor Neighborhood Code,"Assessor-Recorder neighborhood code. See the field ""Assessor Neighborhood"" for the name associated with the code. Also see the reference data for Assessor Neighborhoods at: https://data.sfgov.org/d/dx7g-zwbx",assessor_neighborhood_code,Text
+Assessor Neighborhood,"Assessor-Recorder neighborhood name. See the field ""Assessor Neighborhood Code"" for the associated code. Also see the reference data for Assessor Neighborhoods at: https://data.sfgov.org/d/dx7g-zwbx",assessor_neighborhood,Text
+Supervisor District,The 2022-2032 supervisor district the parcel falls within. This field is automatically computed from the latitude and longitude in the Location field. Blank if no location available or location did not match a district.,supervisor_district,Text
+Supervisor District 2012,The 2012-2022 supervisor district the parcel falls within. This field is automatically computed from the latitude and longitude in the Location field. Blank if no location available or location did not match a district.,supervisor_district_2012,Text
+Analysis Neighborhood,Analysis neighborhoods corresponding to census boundaries. You can see these boundaries here: https://data.sfgov.org/d/p5b7-5n3h  These are computed based on the latitude and longitude in the Location field. Blank if there's no location or the location did not match one of the neighborhoods.,analysis_neighborhood,Text
+the_geom,"The centroid point (latitude, longitude) of the parcel. This is automated. In some cases this may be blank if the block and lot number did not result in a successful geographic match.",the_geom,Point
+Row ID,This is an identifier unique to each row for the purposes of managing updates to the dataset. It is the concatenation of YYYYMMDD corresponding to the January 1 of the roll year for the record and Parcel Number.,row_id,Text
+data_as_of,Timestamp when the record was last pulled from the source system,data_as_of,Floating Timestamp
+data_loaded_at,Timestamp when the record (row) was was last updated/ loaded into DataSF data portal,data_loaded_at,Floating Timestamp
