@@ -1,0 +1,4 @@
+SRES, Single Family Residential, D, Dwelling
+SRES, Single Family Residential, Z, Condominium
+SRES, Single Family Residential, ZBM, Condominium BMR
+SRES, Single Family Residential, ZEU, Condominium Economic Unit
