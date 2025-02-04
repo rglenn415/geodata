@@ -2,3 +2,8 @@ SRES, Single Family Residential, D, Dwelling
 SRES, Single Family Residential, Z, Condominium
 SRES, Single Family Residential, ZBM, Condominium BMR
 SRES, Single Family Residential, ZEU, Condominium Economic Unit
+SRES,Single Family Residential,TH,Town House
+SRES,Single Family Residential,THBM,Town House BMR
+SRES,Single Family Residential,PD,PUD (Planned Unit Development)
+SRES,Single Family Residential,LZ,Live/Work Condominium
+SRES,Single Family Residential,LZBM,Live/Work Condominium BMR
