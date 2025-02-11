@@ -4,7 +4,7 @@ from folium.plugins import HeatMap
 import numpy as np
 
 # Load dataset
-file_path = "top_10_percent_units.csv"  # Update with your local file path
+file_path = "top_5_percent_units.csv"  # Update with your local file path
 df = pd.read_csv(file_path)
 
 # Extract longitude and latitude from 'the_geom'
@@ -25,5 +25,5 @@ heat_data = df_filtered[["latitude", "longitude", "value_score"]].values.tolist(
 HeatMap(heat_data, radius=10, blur=15, max_zoom=1).add_to(sf_map)
 
 # Save map
-sf_map.save("sf_heatmap.html")
+sf_map.save("sf_heatmap_5.html")
 print("Heatmap saved as 'sf_heatmap.html'. Open it in a browser to view.")
