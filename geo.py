@@ -7,22 +7,32 @@ dir = os.getcwd()
 filename = os.path.join(dir, 'sf.csv')
 df = pd.read_csv(filename)
 
-# print(df.head())
 # Filter for property_class_code that equals "SRES"
 sres_df = df[df['use_code'] == "SRES"]
+print(len(sres_df))
+# Ensure required columns exist
+required_cols = {'assessed_fixtures_value', 'assessed_improvement_value', 'assessed_land_value', 'lot_area'}
+missing_cols = required_cols - set(sres_df.columns)
+if missing_cols:
+    raise ValueError(f"Missing required columns: {missing_cols}")
 
-# Calculate the total assessed value by adding all relevant columns
-sres_df['total_assessed_value'] = sres_df['assessed_fixtures_value'] + \
-                                  sres_df['assessed_improvement_value'] + \
-                                  sres_df['assessed_land_value']
+# Calculate total assessed value (excluding personal property)
+sres_df['total_assessed_value'] = (
+    sres_df['assessed_fixtures_value'] + 
+    sres_df['assessed_improvement_value'] + 
+    sres_df['assessed_land_value']
+)
 
-# Find units in the top 10% of total assessed value
-top_10_percentile_value = sres_df['total_assessed_value'].quantile(0.90)
-top_10_percent_units = sres_df[sres_df['total_assessed_value'] > top_10_percentile_value]
+# Calculate lot price per square foot (avoid division by zero)
+sres_df['property_price_per_sqft'] = sres_df['total_assessed_value'] / sres_df['property_area']
+sres_df.loc[sres_df['property_area'] == 0, 'property_price_per_sqft'] = None  # Handle zero lot area
 
-print(f"\nUnits in the top 10% of total assessed value: {len(top_10_percent_units)}")
-if len(top_10_percent_units) > 0:
-    print(top_10_percent_units.head())
+# # Find top 5% of properties based on lot price per sq ft
+# top_5_percentile_value = sres_df['property_price_per_sqft'].quantile(0.95)
+# top_5_percent_units = sres_df[sres_df['property_price_per_sqft'] > top_5_percentile_value]
 
-output_filename = os.path.join(dir, 'top_10_percent_units.csv')
-top_10_percent_units.to_csv(output_filename, index=False)
+top_100_valuable_buildings = sres_df.sort_values(by='total_assessed_value', ascending=False).head(100)
+
+# Save results
+output_filename = os.path.join(dir, 'top_100_valuable_buildings.csv')
+top_100_valuable_buildings.to_csv(output_filename, index=False)
