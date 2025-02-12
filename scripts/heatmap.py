@@ -4,8 +4,8 @@ from folium.plugins import HeatMap
 import numpy as np
 import os
 
-import_file = "top_100_valuable_buildings.csv"
-output_file_name = "sf_heatmap_100.html"
+import_file = "top_5_percent_properties.csv"
+output_file_name = "sf_heatmap_top_5_percent_properties.html"
 
 script_dir = os.path.dirname(os.path.abspath(__file__))  # Gets the script's directory
 output_data_path = os.path.join(script_dir, "..", "output_data")  # Moves up to geodata, then into datasets
