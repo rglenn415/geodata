@@ -3,10 +3,13 @@ import pandas as pd
 import os
 
 def pull_data(import_file, output_name):
-    # Load the file
-    dir = os.getcwd()
-    filename = os.path.join(dir, import_file)
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Gets the script's directory
+    datasets_path = os.path.join(script_dir, "..", "datasets")  # Moves up to geodata, then into datasets
+    datasets_path = os.path.abspath(datasets_path)  # Normalizes path
+    filename = os.path.join(datasets_path, import_file)
     df = pd.read_csv(filename)
+
+    print(datasets_path)  # Always resolves to C:\Users\skate\PirateLab\geodata\datasets
 
     # Filter for property_class_code that equals "SRES"
     sres_df = df[df['use_code'] == "SRES"]
@@ -35,13 +38,15 @@ def pull_data(import_file, output_name):
     # top 100 properties
     top_100_valuable_buildings = sres_df.sort_values(by='total_assessed_value', ascending=False).head(100)
 
+    output_data_path = os.path.join(script_dir, "..", "output_data")  # Moves up to geodata, then into datasets
+    output_data_path = os.path.abspath(datasets_path) 
     # Save results
-    output_filename = os.path.join(dir, output_name)
+    output_filename = os.path.join(output_data_path, output_name)
     top_100_valuable_buildings.to_csv(output_filename, index=False)
 
 
 def main():
-    import_file = 'sf.csv'
+    import_file = 'sf_assesor_data.csv'
     output_name = 'top_100_valuable_buildings.csv'
     pull_data(import_file, output_name)
 
