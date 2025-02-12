@@ -1,4 +1,4 @@
 sf.csv
 .env
-datasets
-output_data
+datasets/
+output_data/
