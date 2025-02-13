@@ -2,6 +2,8 @@ import geopandas as gpd
 import pandas as pd
 import os
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def load_data(import_file, usecols=None, dtype_map=None):
     """Loads CSV file into a Pandas DataFrame with optional column selection."""
@@ -52,6 +54,14 @@ def find_top_5_percent(df):
     top_5_percent_df = df[df['total_assessed_value'] > threshold]
     
     return top_5_percent_df
+
+def get_top_properties(df, percent):
+    threshold = df['total_assessed_value'].quantile(percent)
+    
+    # Filter for properties above the threshold
+    top_percent_df = df[df['total_assessed_value'] > threshold]
+    
+    return top_percent_df
 
 
 def save_data(df, output_name):
@@ -118,11 +128,90 @@ def pull_data(import_file, output_name, filter_column="use_code", filter_value="
     tax_summary = compare_property_tax_totals(top_5_percent_properties)
     print(tax_summary)
 
+def plot_tax_revenue(df_results):
+    # Set style for better visuals
+    sns.set_style("whitegrid")
+
+    # Create the plot
+    plt.figure(figsize=(10, 6))
+
+    # Loop through tax rate columns and plot each one
+    for column in df_results.columns[2:]:  # Skip 'percentile' and 'total_value' columns
+        plt.plot(df_results["percentile"], df_results[column], marker='o', label=column)
+
+    # Labels and title
+    plt.xlabel("Top Percent of Houses Affected (%)")
+    plt.ylabel("Total Tax Revenue ($)")
+    plt.title("Tax Revenue vs. Top Percentile of Properties")
+    plt.legend(title="Tax Rate")
+    
+    # Show the graph
+    plt.show()
+
+
+def create_graph(import_file, filter_column="use_code", filter_value="SRES"):
+    # Read data
+    usecols = [
+        'use_code', 'assessed_fixtures_value', 'assessed_improvement_value', 
+        'assessed_land_value', 'property_area', 'number_of_bathrooms', 
+        'property_location', 'number_of_bedrooms', 'number_of_rooms', 'the_geom'
+    ]
+    dtype_map = {
+        'assessed_fixtures_value': float, 'assessed_improvement_value': float, 
+        'assessed_land_value': float, 'property_area': float
+    }
+    
+    # Load data (assuming load_data is a function that returns a DataFrame)
+    df = load_data(import_file, usecols=usecols, dtype_map=dtype_map)
+    df = filter_data(df, filter_column, filter_value)
+    df = filter_invalid_properties(df)
+
+    
+    # Define tax rates
+    tax_rates = np.array([0.0117143563, 0.012, 0.013, 0.014, 0.015])
+    print(f'Tax rates: {tax_rates}')
+
+    # Step 1: Calculate total assessed property value for each house
+    df['total_assessed_value'] = (
+        df['assessed_fixtures_value'] + df['assessed_improvement_value'] + df['assessed_land_value']
+    )
+
+    # Step 2: Sort houses by assessed value in descending order
+    df = df.sort_values(by='total_assessed_value', ascending=False)
+
+    # Step 3: Define percentiles to analyze (top X% of houses)
+    percentiles = [5, 10, 15, 20]
+    results = []
+
+    for p in percentiles:
+        # Select the top P% of houses
+        num_houses = int(len(df) * (p / 100))
+        top_houses = df.iloc[:num_houses]
+
+        # Compute total taxable value for this percentile group
+        total_value = top_houses['total_assessed_value'].sum()
+
+        # Compute tax revenue for each tax rate
+        revenues = {f'tax_{rate*100:.1f}%': total_value * rate for rate in tax_rates}
+
+        # Store the result
+        results.append({'percentile': p, 'total_value': total_value, **revenues})
+
+    # Convert results into a DataFrame
+    df_results = pd.DataFrame(results)
+
+    print(df_results)  # For debugging
+    return df_results
+
 
 def main():
     import_file = 'sf_assesor_data.csv'
-    output_name = 'top_5_percent_properties.csv'
-    pull_data(import_file, output_name)
+    output_name = 'matrix.csv'
+    # pull_data(import_file, output_name)
+    df = create_graph(import_file)
+    save_data(df, output_name)
+    plot_tax_revenue(df)
 
+    
 if __name__ == "__main__":
     main()
