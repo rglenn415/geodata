@@ -129,25 +129,20 @@ def pull_data(import_file, output_name, filter_column="use_code", filter_value="
     print(tax_summary)
 
 def plot_tax_revenue(df_results):
-    # Set style for better visuals
+    """
+    Plots tax revenue vs. top percentage of houses affected.
+    """
     sns.set_style("whitegrid")
-
-    # Create the plot
     plt.figure(figsize=(10, 6))
 
-    # Loop through tax rate columns and plot each one
     for column in df_results.columns[2:]:  # Skip 'percentile' and 'total_value' columns
         plt.plot(df_results["percentile"], df_results[column], marker='o', label=column)
 
-    # Labels and title
     plt.xlabel("Top Percent of Houses Affected (%)")
     plt.ylabel("Total Tax Revenue ($)")
     plt.title("Tax Revenue vs. Top Percentile of Properties")
     plt.legend(title="Tax Rate")
-    
-    # Show the graph
     plt.show()
-
 
 def create_graph(import_file, filter_column="use_code", filter_value="SRES"):
     # Read data
@@ -161,14 +156,13 @@ def create_graph(import_file, filter_column="use_code", filter_value="SRES"):
         'assessed_land_value': float, 'property_area': float
     }
     
-    # Load data (assuming load_data is a function that returns a DataFrame)
+    # Load and filter data
     df = load_data(import_file, usecols=usecols, dtype_map=dtype_map)
     df = filter_data(df, filter_column, filter_value)
     df = filter_invalid_properties(df)
 
-    
-    # Define tax rates
-    tax_rates = np.array([0.0117143563, 0.012, 0.013, 0.014, 0.015])
+    # Define tax rates (added 1.17%)
+    tax_rates = np.array([0.0117, 0.012, 0.013, 0.014, 0.015])
     print(f'Tax rates: {tax_rates}')
 
     # Step 1: Calculate total assessed property value for each house
@@ -195,20 +189,39 @@ def create_graph(import_file, filter_column="use_code", filter_value="SRES"):
         revenues = {f'tax_{rate*100:.1f}%': total_value * rate for rate in tax_rates}
 
         # Store the result
-        results.append({'percentile': p, 'total_value': total_value, **revenues})
+        results.append({'percentile': p, 'num_houses': num_houses, 'total_value': total_value, **revenues})
 
     # Convert results into a DataFrame
     df_results = pd.DataFrame(results)
 
-    print(df_results)  # For debugging
+    print(df_results)  # Debugging output
     return df_results
+def compute_tax_differences(df_results):
+    """
+    Computes the difference between tax revenue at 1.17% and other tax rates.
+    Returns a DataFrame with differences and number of houses affected.
+    """
+    base_tax_col = 'tax_1.2%'  # Reference tax rate for comparison
+    base_revenue = df_results[base_tax_col]
 
+    # Compute the difference for all other tax rates
+    diff_data = {
+        'percentile': df_results['percentile'],
+        'num_houses': df_results['num_houses'],  # Include number of houses
+        **{col + '_diff': df_results[col] - base_revenue for col in df_results.columns if col.startswith('tax_') and col != base_tax_col}
+    }
+
+    df_differences = pd.DataFrame(diff_data)
+    print(df_differences)  # Debug output
+    return df_differences
 
 def main():
     import_file = 'sf_assesor_data.csv'
     output_name = 'matrix.csv'
     # pull_data(import_file, output_name)
     df = create_graph(import_file)
+    df_differences = compute_tax_differences(df)
+    save_data(df_differences, 'diff.csv')
     save_data(df, output_name)
     plot_tax_revenue(df)
 
