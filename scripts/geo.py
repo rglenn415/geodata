@@ -128,22 +128,6 @@ def pull_data(import_file, output_name, filter_column="use_code", filter_value="
     tax_summary = compare_property_tax_totals(top_5_percent_properties)
     print(tax_summary)
 
-def plot_tax_revenue(df_results):
-    """
-    Plots tax revenue vs. top percentage of houses affected.
-    """
-    sns.set_style("whitegrid")
-    plt.figure(figsize=(10, 6))
-
-    for column in df_results.columns[2:]:  # Skip 'percentile' and 'total_value' columns
-        plt.plot(df_results["percentile"], df_results[column], marker='o', label=column)
-
-    plt.xlabel("Top Percent of Houses Affected (%)")
-    plt.ylabel("Total Tax Revenue ($)")
-    plt.title("Tax Revenue vs. Top Percentile of Properties")
-    plt.legend(title="Tax Rate")
-    plt.show()
-
 def create_graph(import_file, filter_column="use_code", filter_value="SRES"):
     # Read data
     usecols = [
@@ -196,6 +180,7 @@ def create_graph(import_file, filter_column="use_code", filter_value="SRES"):
 
     print(df_results)  # Debugging output
     return df_results
+
 def compute_tax_differences(df_results):
     """
     Computes the difference between tax revenue at 1.17% and other tax rates.
@@ -221,9 +206,9 @@ def main():
     # pull_data(import_file, output_name)
     df = create_graph(import_file)
     df_differences = compute_tax_differences(df)
-    save_data(df_differences, 'diff.csv')
+    # save_data(df_differences, 'diff.csv')
     save_data(df, output_name)
-    plot_tax_revenue(df)
+
 
     
 if __name__ == "__main__":
