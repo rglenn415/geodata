@@ -1,10 +1,8 @@
 import os
 from parcllabs import ParclLabsClient
 
-# Replace with your actual API key
-API_KEY = os.getenv('PARCL_API_KEY')
 
-# Initialize the client with your API key
+API_KEY = os.getenv('PARCL_API_KEY')
 client = ParclLabsClient(api_key=API_KEY)
 
 # Search for markets matching 'San Francisco'
