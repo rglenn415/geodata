@@ -2,3 +2,4 @@ sf.csv
 .env
 datasets/
 output_data/
+.venv/
