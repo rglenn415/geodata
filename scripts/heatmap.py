@@ -24,7 +24,7 @@ df_filtered = df.dropna(subset=["latitude", "longitude", "total_assessed_value",
 df_filtered["value_score"] = np.log1p(df_filtered["total_assessed_value"]) * np.log1p(df_filtered["property_area"])
 
 # Create a base map centered around San Francisco
-sf_map = folium.Map(location=[37.7749, -122.4194], zoom_start=12)
+sf_map = folium.Map(location=[37.7749, -122.4194], zoom_start=12, tiles="CartoDB positron")
 
 # Add heatmap layer
 heat_data = df_filtered[["latitude", "longitude", "value_score"]].values.tolist()
